@@ -50,7 +50,7 @@ public class MauMauSpiel {
         return ablageStapel;
     }
 
-    private Karte ziehen() {
+    public Karte ziehen() {
         Farbe farbe = Farbe.values()[(int) (Math.random() * Farbe.values().length)];
         String[] werte = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king", "ace"};
         String wert = werte[(int) (Math.random() * werte.length)];

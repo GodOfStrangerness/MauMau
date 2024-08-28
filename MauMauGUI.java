@@ -2,11 +2,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
+//FENSTER MAL PROBIEREN
+
 public class MauMauGUI extends JFrame {
     private JPanel spielerHandPanel;
     private JPanel kiHandPanel;
     private JPanel topCardPanel;
     private MauMauSpiel spiel;
+    private JPanel draw;
 
     public MauMauGUI(MauMauSpiel spiel) {
         this.spiel = spiel;
@@ -25,6 +28,19 @@ public class MauMauGUI extends JFrame {
 
         topCardPanel = new JPanel();
         topCardPanel.setBackground(Color.DARK_GRAY);
+
+
+        draw = new JPanel();
+        draw.setLayout(new FlowLayout());
+        draw.setOpaque(false);
+        JButton drawButton = new JButton("Draw");
+        drawButton.setBounds(100,1,100,150);
+        drawButton.addActionListener(e -> {
+            spiel.getSpielerHand().add(spiel.ziehen());
+            updateHands();
+        });
+        draw.add(drawButton);
+
 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new GridBagLayout());
@@ -52,6 +68,12 @@ public class MauMauGUI extends JFrame {
         gbc.anchor = GridBagConstraints.SOUTH;
         mainPanel.add(spielerHandPanel, gbc);
 
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.insets = new Insets(0, 500, 0, 0);
+        gbc.anchor = GridBagConstraints.CENTER;
+        mainPanel.add(draw, gbc);
+
         add(mainPanel);
         updateHands();
         updateTopCard();
@@ -59,6 +81,9 @@ public class MauMauGUI extends JFrame {
 
     public void updateHands() {
         spielerHandPanel.removeAll();
+        int cardCount = spiel.getSpielerHand().size();
+        Dimension cardSize = calculateCardSize(cardCount);
+
         for (Karte karte : spiel.getSpielerHand()) {
             if (karte.getBild() == null) {
                 String key = karte.getWert() + "_" + karte.getFarbe().toString().toLowerCase();
@@ -68,7 +93,7 @@ public class MauMauGUI extends JFrame {
                 }
             }
             KartePanel kartePanel = new KartePanel(karte);
-            kartePanel.setPreferredSize(new Dimension(100, 150));
+            kartePanel.setPreferredSize(cardSize);
             spielerHandPanel.add(kartePanel);
         }
 
@@ -107,5 +132,18 @@ public class MauMauGUI extends JFrame {
         }
         revalidate();
         repaint();
+    }
+
+    private Dimension calculateCardSize(int cardCount) {
+        int maxWidth = spielerHandPanel.getWidth();
+        int cardWidth = 100;
+        int cardHeight = 150;
+
+        if (cardCount > 5) {
+            cardWidth = Math.min(100, maxWidth / cardCount -5);
+            cardHeight = cardWidth * 3 / 2;
+        }
+        return new Dimension(cardWidth, cardHeight);
+        
     }
 }
