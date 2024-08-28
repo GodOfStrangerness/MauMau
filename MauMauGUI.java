@@ -2,8 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-//FENSTER MAL PROBIEREN
-
 public class MauMauGUI extends JFrame {
     private JPanel spielerHandPanel;
     private JPanel kiHandPanel;
